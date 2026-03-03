@@ -168,3 +168,132 @@ function validateUUID(parcel){
     return {pass:true, message: 'Valid UUID', score:100};
 }
 
+function validateParcelNumber(parcel){
+    const fields = parcel.data?.properties?.fields;
+
+    if(!fields?.parcelnumb){
+        return {pass: false, message:'Missing parcel number', score:0}
+    }
+    return {pass: true, message: 'Has Parcel number', score: 100}
+}
+
+//USPS Validation
+function validateUSPS(parcel){
+    const fields = parcel.data?.properties?.fields
+    if(!fields?.dpv_status){
+        return {pass: false, message:'Missing USPS validation', score: 70}
+    }
+
+    const validStatuses = ['V', "D", "S"];
+    if(!validStatuses.includes(fields.dpv_status)){
+        return {pass:false, message:`Unknown DPV status: ${fields.dpv_status}`, score:50}
+    }
+
+    return { pass: true, message: 'USPS validated', score:100}
+}
+
+//Zoning Data
+function validateZoning(parcel){
+    const fields = parcel.data?.properties?.fields
+    if(!fields?.zonging){
+        return {pass: false, message: 'Missing zoning data', score: 0}
+    }
+
+    if(!fields?.zoning_description){
+        return {pass: false, message: 'Missing zoning description', score: 70}
+    }
+
+    return {pass: true, message: 'Has zoning data',score: 100}
+}
+
+//Building Data
+function validateBuildingData(parcel){
+    const fields = parcel.data?.properties?.fields
+    if(!fields?.ll_bldg_footprint_sqft){
+        return{pass: false, message: 'Missing building footprint', score:70}
+    }
+
+    if(fields.ll_bldg_footprint_sqft <= 0 ){
+        return {pass: false, message: 'Invalid footprint size', score: 30}
+    }
+
+    return {pass: true, message: 'has building data', score:100}
+}
+
+//Lot Size
+function validateLotSize(parcel){
+    const fields = parcel.data?.properties?.fields
+    if(!fields.ll_gissqft || !fields?.ll_gisacre){
+        return {pass: false, message:'Missing lot size', score : 0}
+    }
+
+    if(fields.ll_gissqft <= 0 || fields.ll_gisacre <= 0) {
+        return {pass:false, message:'Invalid lot size', score:0}
+    }
+
+    //check consistency: 1 acre = 43,560 sqft
+    const calculated = fields.ll_gissqft / 43560
+    const difference = Math.abs(calculated - fields.ll_gisacre)
+
+    if(difference > 0.1){
+        return {pass:false, message:'Inconsistent lot size values', score:60}
+    }
+    return {pass: true, message: 'Valid lot size', score:100}
+}
+
+//Data Fresh?
+function validateDataFreshness(parcel){
+    const fields = parcel.data?.properties?.fields
+    if(!fields?.ll_updated_at){
+        return {pass:false, message:'Missing update timestamp', score:50}
+    }
+    const updated = new Date(fields.ll_updated_at);
+    const now = new Date()
+    const daysSince = (now - updated ) / (1000 * 60 * 60 * 24);
+
+    if(daysSince > 365){
+        return { pass:false, message:'Data over 1 year old',score:60};
+    }
+    if(daysSince > 180){
+        return {pass:false, message:'Data over 6 months old', score:80}
+    }
+    return {pass: true, message:'Data is fresh', score:100}
+}
+
+//Export checks
+const ALL_CHECKS = [
+    {name: 'Geometry Structure', fn:validateGeometry , category: 'geometry'},
+    {name: 'Coordinate Validity', fn: validateCoordinates, category: 'geometry'},
+    {name: 'Address Format', fn: validateAddress, category: 'address'},
+    {name: 'State Code', fn: validateStateCode, category: 'address'},
+    {name: 'ZIP Code', fn: validateZipCode, category: 'address'},
+    {name: 'Owner Data', fn: validateOwner, category: 'property'},
+    {name: 'Property Value', fn: validatePropertyValue, category: 'property'},
+    {name: 'Year Built', fn: validateYearBuilt, category: 'property'},
+    {name: 'UUID Format', fn: validateUUID, category: 'identifiers'},
+    {name: 'Parcel Number', fn: validateParcelNumber, category: 'identifiers'},
+    {name: 'USPS Validation', fn: validateUSPS, category: 'validation'},
+    {name: 'Zoning Data', fn: validateZoning, category: 'zoning'},
+    {name: 'Building Data', fn: validateBuildingData, category: 'building'},
+    {name: 'Lot Size', fn: validateLotSize, category: 'property'},
+    {name: 'Data Freshness', fn: validateDataFreshness, category: 'metadata'}
+];
+
+module.exports = {
+    ALL_CHECKS, 
+    validateAddress,
+    validateBuildingData,
+    validateCoordinates,
+    validateDataFreshness,
+    validateGeometry,
+    validateLotSize,
+    validateOwner,
+    validateParcelNumber,
+    validatePropertyValue,
+    validateStateCode,
+    validateUSPS,
+    validateUUID,
+    validateYearBuilt,
+    validateZipCode,
+    validateZoning
+};
