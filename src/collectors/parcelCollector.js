@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_KEY = process.env.REGRID_API_KEY;
-const BASE_URL = 'https://ap.regrid.com/v2';
+const BASE_URL = 'https://app.regrid.com/api/v2';
 
 
 /* INCLUDED DATA FOR SAMPLE COUNTIES!!!
@@ -20,6 +20,7 @@ const BASE_URL = 'https://ap.regrid.com/v2';
 
 //TEST ADDRESSES ACROSS DIFFERENT COUNTIES
 const TEST_ADDRESSES = [
+    '1245 Fake Rd, Pompton Lakes, NJ', //COMPLETE BS ADDY
     '5818 Diana Dr, Garland, TX', //Dallas County
     '6535 N Ewing St, Indianapolis, IN', //Marion County
     '1660 Martha-Leeville Rd, Lebanon, TN', //Wilson County
@@ -37,7 +38,7 @@ async function fetchParcel(address) {
                 query: address,
                 limit: 1
             },
-            timeout:1000
+            timeout:5000
         });
 
         if(response.data.parcels?.features?.length > 0) {
@@ -114,7 +115,7 @@ async function collectParcels(count = 100) {
 
 //RUN IF CALLED DIRECTLY
 if (require.main === module){
-    collectParcels(5).then(() =>{
+    collectParcels(10).then(() =>{
         console.log('Collection Complete!');
     }).catch(error =>{
         console.error('Collection Failed!', error)
