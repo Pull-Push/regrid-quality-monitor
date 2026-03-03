@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "collect":"node src/collectors/parcelCollector.js",
-    "validate": "node src/validators/qualityValidators.js",
+    "validate": "node src/validators/qualityValidator.js",
     "report": "node src/reporters/htmlReporter",
     "monitor": "npm run collect && npm run validate && npm run report",
     "test": "jest"

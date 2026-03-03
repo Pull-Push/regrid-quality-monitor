@@ -88,7 +88,7 @@ function validateStateCode(parcel){
     if(state.length !== 2){
         return {pass: false, message:`Invalid state code lenngth ${state}`, score:0}
     }
-    if(!/^{[A-Z]{2}$/.test(state)) {
+    if(!/^[A-Z]{2}$/.test(state)) {
         return {pass:false, message:`Invalid state code format: ${state}`, score:50};
     }
     return {pass: true, message:'Valid state code', score:100}
@@ -127,7 +127,7 @@ function validatePropertyValue(parcel){
     const fields = parcel.data?.properties?.fields;
 
     if(!fields?.parval && !fields?.landval){
-        return {pass:false, message:'Missing property values, score:0'};
+        return {pass:false, message:'Missing property values', score:0};
     }
     if(fields?.parval && fields?.landval <= 0){
         return {pass: false, message:'Invalid property values', score:0}
@@ -155,7 +155,7 @@ function validateUUID(parcel){
     const fields = parcel.data?.properties?.fields
 
     if(!fields?.ll_uuid){
-        return { pass:false, messag: 'Missing UUID format', score:0 }
+        return { pass:false, message: 'Missing UUID format', score:0 }
     }
 
     const uuid = fields.ll_uuid
@@ -195,7 +195,7 @@ function validateUSPS(parcel){
 //Zoning Data
 function validateZoning(parcel){
     const fields = parcel.data?.properties?.fields
-    if(!fields?.zonging){
+    if(!fields?.zoning){
         return {pass: false, message: 'Missing zoning data', score: 0}
     }
 
