@@ -10,8 +10,6 @@
 
 A three-stage automated pipeline that collects parcel data from Regrid's REST API, validates it across 15 quality dimensions, and generates a beautiful HTML dashboard showing actionable quality metrics.
 
-**Live Demo Dashboard:** [View Sample Report](./reports/sample-report.html)
-
 ---
 
 ## ✨ Features
@@ -253,7 +251,7 @@ MIT License - feel free to use this for learning or inspiration!
 
 ## 📚 Resources
 
-- [Regrid API Documentation](https://regrid.com/docs)
+- [Regrid API Documentation](https://developer.regrid.com/reference/getting-started-with-your-api)
 - [GeoJSON Specification](https://datatracker.ietf.org/doc/html/rfc7946)
 - [USPS Address Validation](https://www.usps.com/business/web-tools-apis/)
 
