@@ -25,9 +25,11 @@ A three-stage automated pipeline that collects parcel data from Regrid's REST AP
 ## 📸 Screenshots
 
 ### Dashboard Overview
+<img width="1872" height="862" alt="IMG_6627" src="https://github.com/user-attachments/assets/f718dd4d-32a6-4674-b199-39d35e9e10c7" />
 *95/100 overall quality score with category breakdowns*
 
 ### Individual Parcel Results
+<img width="1863" height="945" alt="IMG_6628" src="https://github.com/user-attachments/assets/fcb8122c-3384-4f54-90d7-47e3afb5c46b" />
 *Detailed pass/fail metrics for each validation check*
 
 ---
